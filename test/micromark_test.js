@@ -23,6 +23,32 @@ describe('micromark-extension-wiki-link', () => {
     assert.equal(serialized, '<p><a href="#/page/wiki_link" class="internal new">Wiki Link</a></p>');
   });
 
+  it("parses a wiki link that has a section", () => {
+    let serialized = micromark('[[Wiki Link#Section A]]', {
+      extensions: [syntax()],
+      htmlExtensions: [html()]
+    });
+
+    assert.equal(serialized, '<p><a href="#/page/wiki_link#section_a" class="internal new">Wiki Link#Section A</a></p>');
+  });
+
+  it("parses a wiki link that has a section but no target", () => {
+    let serialized = micromark('[[#Section A]]', {
+      extensions: [syntax()],
+      htmlExtensions: [html()]
+    });
+
+    assert.equal(serialized, '<p><a href="#/page/#section_a" class="internal new">#Section A</a></p>');
+  });
+
+  it("parses a wiki link that has a section and no target, and the current page name is known", () => {
+    let serialized = micromark('[[#Section A]]', {
+      extensions: [syntax()],
+      htmlExtensions: [html({pageName: 'Page A'})]
+    });
+
+    assert.equal(serialized, '<p><a href="#/page/page_a#section_a" class="internal new">Page A#Section A</a></p>');
+  });
 
   it("handles wiki links with aliases", () => {
     let serialized = micromark('[[Real Page:Page Alias]]', {

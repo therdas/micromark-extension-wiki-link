@@ -6,6 +6,7 @@ function html (opts = {}) {
   const wikiLinkClassName = opts.wikiLinkClassName || 'internal'
   const defaultHrefTemplate = (permalink) => `#/page/${permalink}`
   const hrefTemplate = opts.hrefTemplate || defaultHrefTemplate
+  const selfName = opts.pageName || ''
 
   function enterWikiLink () {
     let stack = this.getData('wikiLinkStack')
@@ -33,13 +34,21 @@ function html (opts = {}) {
   function exitWikiLink () {
     const wikiLink = this.getData('wikiLinkStack').pop()
 
-    const pagePermalinks = pageResolver(wikiLink.target)
+    let target = wikiLink.target
+    let displayName = wikiLink.target
+
+    if (target.indexOf('#') !== -1 && target[0] === '#' && selfName.length > 0) {
+      target = selfName + target
+      displayName = target
+    }
+
+    const pagePermalinks = pageResolver(target)
     let permalink = pagePermalinks.find(p => permalinks.indexOf(p) !== -1)
     const exists = permalink !== undefined
     if (!exists) {
       permalink = pagePermalinks[0]
     }
-    let displayName = wikiLink.target
+
     if (wikiLink.alias) {
       displayName = wikiLink.alias
     }
