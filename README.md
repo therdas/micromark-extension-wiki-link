@@ -63,6 +63,7 @@ let serialized = micromark('[[Wiki Link]]', {
 
 * `options.wikiLinkClassName [String]`: a class name that is attached to any rendered wiki links. Defaults to `"internal"`.
 * `options.newClassName [String]`: a class name that is attached to any rendered wiki links that do not exist. Defaults to `"new"`.
+* `options.pageName [String]`: the name of the page being processed - this can be set when Obsidian-style internal links with an empty pagename but a section being maintained is needed. In case any such link (example, `[[#Section]])`) is found, this will be used as the name of the page.
 
 ### Aliasing pages
 
